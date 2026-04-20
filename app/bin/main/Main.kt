@@ -5,10 +5,10 @@ import kotlin.random.Random
 
 fun main() = runBlocking {
     val table = Table()
-    val mode = SolutionMode.HIERARCHY // Оберіть режим тут
+    val mode = SolutionMode.TRY_LOCK //РЕЖИМ ТУТ!!  HIERARCHY, WAITER, MONITOR, TRY_LOCK
     
-    println("=== Запуск філософів (Kotlin Coroutines) ===")
-    println("Режим: $mode")
+    println("=== launching philosophers (Kotlin Coroutines) ===")
+    println("_SET_MODE --$mode")
 
     coroutineScope {
         repeat(5) { id ->
@@ -18,7 +18,7 @@ fun main() = runBlocking {
         }
     }
 
-    println("=== Усі філософи завершили трапезу. Стіл порожній. ===")
+    println("=== All the philosophers have finished their meal. The table is empty. ===")
 }
 
 suspend fun philosopher(id: Int, table: Table, mode: SolutionMode) {
@@ -26,16 +26,15 @@ suspend fun philosopher(id: Int, table: Table, mode: SolutionMode) {
     val leftFork = (id + 1) % 5
 
     repeat(10) { i ->
-        println("Філософ $id думає (${i + 1}/10)")
+        println("Philosopher $id thinking (${i + 1}/10)")
         delay(Random.nextLong(50, 150))
 
         mode.pickForks(id, leftFork, rightFork, table)
 
-        println("Філософ $id ЇСТЬ (${i + 1}/10)")
+        println("Philosopher $id EATS (${i + 1}/10)")
         delay(Random.nextLong(50, 150))
 
-        // Звільнення виделок
         mode.putForks(id, leftFork, rightFork, table)
     }
-    println("--- Філософ $id ЗАКІНЧИВ ---")
+    println("--- Philosopher $id FINISHED ---")
 }
